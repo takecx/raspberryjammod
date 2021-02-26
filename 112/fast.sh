@@ -3,7 +3,7 @@ if [ -d src ]; then
 fi
 cp -r ../19/src .
 for x in src/main/java/mobi/omegacentauri/raspberryjammod/*.java ; do
-    sed -i -f fix.sed $x 
+    sed -i '' -f fix.sed $x 
 done
 rm build/libs/Raspberr*.jar 2> /dev/null
 sh gradlew build
