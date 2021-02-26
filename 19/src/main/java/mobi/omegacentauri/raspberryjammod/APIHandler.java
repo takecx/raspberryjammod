@@ -60,6 +60,9 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
+import net.minecraft.command.CommandWeather; // http://maven.thiakil.com/forge-1.12-javadoc/index.html?net/minecraft/command/CommandWeather.html
+import net.minecraft.command.CommandException; // http://maven.thiakil.com/forge-1.12-javadoc/net/minecraft/command/CommandException.html
+
 public class APIHandler {
 	// world.checkpoint.save/restore, player.setting, world.setting(nametags_visible,*),
 	// camera.setFixed() unsupported
@@ -84,6 +87,8 @@ public class APIHandler {
 	protected static final String WORLDGETPLAYERIDS = "world.getPlayerIds"; 	
 	protected static final String WORLDGETPLAYERID = "world.getPlayerId"; 
 	protected static final String WORLDSETTING = "world.setting";
+
+	protected static final String WORLDCHANGEWEAGHER = "world.changeWeather";
 	
 	protected static final String WORLDSETTING_WORLD_IMMUTABLE = "world_immutable";
 	protected static final String WORLDSETTING_INCLUDE_NBT = "include_nbt_with_data";
@@ -156,6 +161,7 @@ public class APIHandler {
 			 EVENTSCHATPOSTS,
 			 EVENTSCLEAR,
 			 EVENTSSETTING,
+			 WORLDCHANGEWEAGHER,
 	};
 	
 	protected String[] worldSettings = {
@@ -824,6 +830,9 @@ public class APIHandler {
 //				eventHandler.setPause(scan.nextInt() != 0);
 			// name_tags not supported
 		}
+		else if(cmd.equals(WORLDCHANGEWEAGHER)) {
+			changeWeather(scan);
+		}
 		else if (cmd.equals(EVENTSSETTING)) {
 			String setting = scan.next();
 			if (setting.equals(EVENTSSETTING_RESTRICT_TO_SWORD)) // connection-specific 
@@ -847,6 +856,17 @@ public class APIHandler {
 		}
 		else {
 			unknownCommand();
+		}
+	}
+
+	private void changeWeather(Scanner scan) {
+		CommandWeather weather = new CommandWeather();
+		String[] command = {scan.next()};
+		try{
+			weather.execute(RaspberryJamMod.minecraftServer,playerMP,command);
+		}
+		catch(CommandException ce){
+			System.err.println(ce.getMessage());
 		}
 	}
 	
