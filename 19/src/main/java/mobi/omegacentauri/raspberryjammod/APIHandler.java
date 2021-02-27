@@ -65,6 +65,7 @@ import net.minecraft.command.CommandException; // http://maven.thiakil.com/forge
 import net.minecraft.command.CommandWeather; // http://maven.thiakil.com/forge-1.12-javadoc/index.html?net/minecraft/command/CommandWeather.html
 import net.minecraft.command.CommandGameMode; // http://maven.thiakil.com/forge-1.12-javadoc/net/minecraft/command/CommandGameMode.html
 import net.minecraft.command.CommandDifficulty; // http://maven.thiakil.com/forge-1.12-javadoc/net/minecraft/command/CommandDifficulty.html
+import net.minecraft.command.CommandEnchant; // http://maven.thiakil.com/forge-1.12-javadoc/net/minecraft/command/CommandEnchant.html
 
 public class APIHandler {
 	// world.checkpoint.save/restore, player.setting, world.setting(nametags_visible,*),
@@ -94,6 +95,7 @@ public class APIHandler {
 	protected static final String WORLDCHANGEWEAGHER = "world.changeWeather";
 	protected static final String WORLDCHANGEGAMEMODE = "world.changeGameMode";
 	protected static final String WORLDCHANGEDIFFICULTY = "world.changeDifficulty";
+	protected static final String GIVEENCHANT = "giveEnchant";
 	
 	protected static final String WORLDSETTING_WORLD_IMMUTABLE = "world_immutable";
 	protected static final String WORLDSETTING_INCLUDE_NBT = "include_nbt_with_data";
@@ -169,6 +171,7 @@ public class APIHandler {
 			 WORLDCHANGEWEAGHER,
 			 WORLDCHANGEGAMEMODE,
 			 WORLDCHANGEDIFFICULTY,
+			 GIVEENCHANT,
 	};
 	
 	protected String[] worldSettings = {
@@ -849,6 +852,9 @@ public class APIHandler {
 			CommandDifficulty diffuculty = new CommandDifficulty();
 			executeSimpleCommand(diffuculty,scan);
 		}
+		else if (cmd.equals(GIVEENCHANT)) {
+			giveEnchant(scan);
+		}
 		else if (cmd.equals(EVENTSSETTING)) {
 			String setting = scan.next();
 			if (setting.equals(EVENTSSETTING_RESTRICT_TO_SWORD)) // connection-specific 
@@ -879,6 +885,18 @@ public class APIHandler {
 		String[] args = {scan.next()};
 		try{
 			command.execute(RaspberryJamMod.minecraftServer,playerMP,args);
+		}
+		catch(CommandException ce){
+			System.err.println(ce.getMessage());
+		}
+	}
+
+	private void giveEnchant(Scanner scan) {
+		CommandEnchant enchant = new CommandEnchant();
+		String[] args = {"@p", scan.next(), scan.next()};
+		System.err.println(args);
+		try{
+			enchant.execute(RaspberryJamMod.minecraftServer,playerMP,args);
 		}
 		catch(CommandException ce){
 			System.err.println(ce.getMessage());
