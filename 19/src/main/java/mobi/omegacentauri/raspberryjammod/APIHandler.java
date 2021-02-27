@@ -60,9 +60,11 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
+import net.minecraft.command.CommandBase; // http://maven.thiakil.com/forge-1.12-javadoc/net/minecraft/command/CommandBase.html
+import net.minecraft.command.CommandException; // http://maven.thiakil.com/forge-1.12-javadoc/net/minecraft/command/CommandException.html
 import net.minecraft.command.CommandWeather; // http://maven.thiakil.com/forge-1.12-javadoc/index.html?net/minecraft/command/CommandWeather.html
 import net.minecraft.command.CommandGameMode; // http://maven.thiakil.com/forge-1.12-javadoc/net/minecraft/command/CommandGameMode.html
-import net.minecraft.command.CommandException; // http://maven.thiakil.com/forge-1.12-javadoc/net/minecraft/command/CommandException.html
+import net.minecraft.command.CommandDifficulty; // http://maven.thiakil.com/forge-1.12-javadoc/net/minecraft/command/CommandDifficulty.html
 
 public class APIHandler {
 	// world.checkpoint.save/restore, player.setting, world.setting(nametags_visible,*),
@@ -91,6 +93,7 @@ public class APIHandler {
 
 	protected static final String WORLDCHANGEWEAGHER = "world.changeWeather";
 	protected static final String WORLDCHANGEGAMEMODE = "world.changeGameMode";
+	protected static final String WORLDCHANGEDIFFICULTY = "world.changeDifficulty";
 	
 	protected static final String WORLDSETTING_WORLD_IMMUTABLE = "world_immutable";
 	protected static final String WORLDSETTING_INCLUDE_NBT = "include_nbt_with_data";
@@ -165,6 +168,7 @@ public class APIHandler {
 			 EVENTSSETTING,
 			 WORLDCHANGEWEAGHER,
 			 WORLDCHANGEGAMEMODE,
+			 WORLDCHANGEDIFFICULTY,
 	};
 	
 	protected String[] worldSettings = {
@@ -834,10 +838,16 @@ public class APIHandler {
 			// name_tags not supported
 		}
 		else if(cmd.equals(WORLDCHANGEWEAGHER)) {
-			changeWeather(scan);
+			CommandWeather weather = new CommandWeather();
+			executeSimpleCommand(weather,scan);
 		}
 		else if(cmd.equals(WORLDCHANGEGAMEMODE)) {
-			changeGameMode(scan);
+			CommandGameMode gamemode = new CommandGameMode();
+			executeSimpleCommand(gamemode,scan);
+		}
+		else if(cmd.equals(WORLDCHANGEDIFFICULTY)) {
+			CommandDifficulty diffuculty = new CommandDifficulty();
+			executeSimpleCommand(diffuculty,scan);
 		}
 		else if (cmd.equals(EVENTSSETTING)) {
 			String setting = scan.next();
@@ -865,22 +875,10 @@ public class APIHandler {
 		}
 	}
 
-	private void changeWeather(Scanner scan) {
-		CommandWeather weather = new CommandWeather();
+	private void executeSimpleCommand(CommandBase command, Scanner scan){
 		String[] args = {scan.next()};
 		try{
-			weather.execute(RaspberryJamMod.minecraftServer,playerMP,args);
-		}
-		catch(CommandException ce){
-			System.err.println(ce.getMessage());
-		}
-	}
-
-	private void changeGameMode(Scanner scan) {
-		CommandGameMode gamemode = new CommandGameMode();
-		String[] args = {scan.next()};
-		try{
-			gamemode.execute(RaspberryJamMod.minecraftServer,playerMP,args);
+			command.execute(RaspberryJamMod.minecraftServer,playerMP,args);
 		}
 		catch(CommandException ce){
 			System.err.println(ce.getMessage());
