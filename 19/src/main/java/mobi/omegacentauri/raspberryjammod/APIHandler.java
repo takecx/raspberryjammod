@@ -61,6 +61,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 import net.minecraft.command.CommandWeather; // http://maven.thiakil.com/forge-1.12-javadoc/index.html?net/minecraft/command/CommandWeather.html
+import net.minecraft.command.CommandGameMode; // http://maven.thiakil.com/forge-1.12-javadoc/net/minecraft/command/CommandGameMode.html
 import net.minecraft.command.CommandException; // http://maven.thiakil.com/forge-1.12-javadoc/net/minecraft/command/CommandException.html
 
 public class APIHandler {
@@ -89,6 +90,7 @@ public class APIHandler {
 	protected static final String WORLDSETTING = "world.setting";
 
 	protected static final String WORLDCHANGEWEAGHER = "world.changeWeather";
+	protected static final String WORLDCHANGEGAMEMODE = "world.changeGameMode";
 	
 	protected static final String WORLDSETTING_WORLD_IMMUTABLE = "world_immutable";
 	protected static final String WORLDSETTING_INCLUDE_NBT = "include_nbt_with_data";
@@ -162,6 +164,7 @@ public class APIHandler {
 			 EVENTSCLEAR,
 			 EVENTSSETTING,
 			 WORLDCHANGEWEAGHER,
+			 WORLDCHANGEGAMEMODE,
 	};
 	
 	protected String[] worldSettings = {
@@ -833,6 +836,9 @@ public class APIHandler {
 		else if(cmd.equals(WORLDCHANGEWEAGHER)) {
 			changeWeather(scan);
 		}
+		else if(cmd.equals(WORLDCHANGEGAMEMODE)) {
+			changeGameMode(scan);
+		}
 		else if (cmd.equals(EVENTSSETTING)) {
 			String setting = scan.next();
 			if (setting.equals(EVENTSSETTING_RESTRICT_TO_SWORD)) // connection-specific 
@@ -861,9 +867,20 @@ public class APIHandler {
 
 	private void changeWeather(Scanner scan) {
 		CommandWeather weather = new CommandWeather();
-		String[] command = {scan.next()};
+		String[] args = {scan.next()};
 		try{
-			weather.execute(RaspberryJamMod.minecraftServer,playerMP,command);
+			weather.execute(RaspberryJamMod.minecraftServer,playerMP,args);
+		}
+		catch(CommandException ce){
+			System.err.println(ce.getMessage());
+		}
+	}
+
+	private void changeGameMode(Scanner scan) {
+		CommandGameMode gamemode = new CommandGameMode();
+		String[] args = {scan.next()};
+		try{
+			gamemode.execute(RaspberryJamMod.minecraftServer,playerMP,args);
 		}
 		catch(CommandException ce){
 			System.err.println(ce.getMessage());
