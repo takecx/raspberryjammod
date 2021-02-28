@@ -592,7 +592,8 @@ public class APIHandler {
 			throws InputMismatchException, NoSuchElementException, IndexOutOfBoundsException {
 
 		if (cmd.equals(SETBLOCK)) {
-			Location pos = getBlockLocation(scan);
+			// Location pos = getBlockLocation(scan);
+			Location pos = getBlockAbsoluteLocation(scan);
 			
 			if (permission != null && permission.isPermitted(pos.world, pos.getX(), pos.getZ()))
 				return;
@@ -619,23 +620,28 @@ public class APIHandler {
 			eventHandler.queueServerAction(setState);
 		}
 		else if (cmd.equals(GETBLOCK)) {
-			Location pos = getBlockLocation(scan);
+			// Location pos = getBlockLocation(scan);
+			Location pos = getBlockAbsoluteLocation(scan);
 			int id = eventHandler.getBlockId(pos);
 
 			sendLine(id);
 		}
 		else if (cmd.equals(GETBLOCKWITHDATA)) {
 			if (includeNBTWithData) {
-				sendLine(eventHandler.describeBlockState(getBlockLocation(scan)));
+				// sendLine(eventHandler.describeBlockState(getBlockLocation(scan)));
+				sendLine(eventHandler.describeBlockState(getBlockAbsoluteLocation(scan)));
 			}
 			else {
-				BlockState state = eventHandler.getBlockState(getBlockLocation(scan));
+				// BlockState state = eventHandler.getBlockState(getBlockLocation(scan));
+				BlockState state = eventHandler.getBlockState(getBlockAbsoluteLocation(scan));
 				sendLine(""+state.id+","+state.meta);
 			}
 		}
 		else if (cmd.equals(GETBLOCKS)) {
-			Location pos1 = getBlockLocation(scan);
-			Location pos2 = getBlockLocation(scan);
+			// Location pos1 = getBlockLocation(scan);
+			// Location pos2 = getBlockLocation(scan);
+			Location pos1 = getBlockAbsoluteLocation(scan);
+			Location pos2 = getBlockAbsoluteLocation(scan);
 
 			StringBuilder out = new StringBuilder();
 			int x1 = Math.min(pos1.getX(), pos2.getX());
@@ -654,8 +660,10 @@ public class APIHandler {
 			sendLine(out.toString());
 		}
 		else if (cmd.equals(GETBLOCKSWITHDATA)) {
-			Location pos1 = getBlockLocation(scan);
-			Location pos2 = getBlockLocation(scan);
+			// Location pos1 = getBlockLocation(scan);
+			// Location pos2 = getBlockLocation(scan);
+			Location pos1 = getBlockAbsoluteLocation(scan);
+			Location pos2 = getBlockAbsoluteLocation(scan);
 			StringBuilder out = new StringBuilder();
 			int x1 = Math.min(pos1.getX(), pos2.getX());
 			int x2 = Math.max(pos1.getX(), pos2.getX());
@@ -709,8 +717,10 @@ public class APIHandler {
 //			Block.getBlockById(id).setLightLevel(value);
 //		}
 		else if (cmd.equals(SETBLOCKS)) {
-			Location pos1 = getBlockLocation(scan);
-			Location pos2 = getBlockLocation(scan);
+			// Location pos1 = getBlockLocation(scan);
+			// Location pos2 = getBlockLocation(scan);
+			Location pos1 = getBlockAbsoluteLocation(scan);
+			Location pos2 = getBlockAbsoluteLocation(scan);
 
 			/* TODO? do partial drawing in case of partial overlap with forbidden area.
 			 */
@@ -1001,10 +1011,11 @@ public class APIHandler {
 	}
     
 	protected void spawnEntityJuice(Scanner scan) {
-		double x0 = scan.nextDouble();
-		double y0 = scan.nextDouble();
-		double z0 = scan.nextDouble();
-		Vec3w pos = Location.decodeVec3w(serverWorlds, x0, y0, z0);
+		// double x0 = scan.nextDouble();
+		// double y0 = scan.nextDouble();
+		// double z0 = scan.nextDouble();
+		// Vec3w pos = Location.decodeVec3w(serverWorlds, x0, y0, z0);
+		Vec3w pos = getAbsoluteVec3w(scan);
 		
 		int entityID = scan.nextInt();
 		
@@ -1038,10 +1049,11 @@ public class APIHandler {
             entityId = rename111(entityId);
         }
         
-		double x0 = scan.nextDouble();
-		double y0 = scan.nextDouble();
-		double z0 = scan.nextDouble();
-		Vec3w pos = Location.decodeVec3w(serverWorlds, x0, y0, z0);
+		// double x0 = scan.nextDouble();
+		// double y0 = scan.nextDouble();
+		// double z0 = scan.nextDouble();
+		// Vec3w pos = Location.decodeVec3w(serverWorlds, x0, y0, z0);
+		Vec3w pos = getAbsoluteVec3w(scan);
 		
 		// TODO? Could do damage by spawning dragons close to a forbidden zone; perhaps forbid that?
 		if (permission != null && ! permission.isPermitted(pos.world, 
@@ -1162,10 +1174,11 @@ public class APIHandler {
 	
 	protected void spawnParticle(Scanner scan) {
 		String particleName = scan.next();
-		double x0 = scan.nextDouble();
-		double y0 = scan.nextDouble();
-		double z0 = scan.nextDouble();
-		Vec3w pos = Location.decodeVec3w(serverWorlds, x0, y0, z0);
+		// double x0 = scan.nextDouble();
+		// double y0 = scan.nextDouble();
+		// double z0 = scan.nextDouble();
+		// Vec3w pos = Location.decodeVec3w(serverWorlds, x0, y0, z0);
+		Vec3w pos = getAbsoluteVec3w(scan);
 		double dx = scan.nextDouble();
 		double dy = scan.nextDouble();
 		double dz = scan.nextDouble();
@@ -1509,11 +1522,12 @@ public class APIHandler {
 		if (e != null) {
 			float serverYaw = 0f;
 			serverYaw = e.rotationYaw;
-	
-			double x = scan.nextDouble();
-			double y = scan.nextDouble();
-			double z = scan.nextDouble();
-			Vec3w pos = Location.decodeVec3w(serverWorlds, x, y, z);
+
+			Vec3w pos = getAbsoluteVec3w(scan);
+			// double x = scan.nextDouble();
+			// double y = scan.nextDouble();
+			// double z = scan.nextDouble();
+			// Vec3w pos = Location.decodeVec3w(serverWorlds, x, y, z);
 			if (pos.world != e.getEntityWorld()) {
 //				e.setWorld(pos.world);
 				System.out.println("World change unsupported");
@@ -1542,7 +1556,8 @@ public class APIHandler {
 			float serverYaw = 0f;
 			if (e != null) {
 				serverYaw = e.rotationYaw;
-				Location pos = getBlockLocation(scan);
+				// Location pos = getBlockLocation(scan);
+				Location pos = getBlockAbsoluteLocation(scan);
 				if (pos.world != e.getEntityWorld()) {
 					// TODO: implement moving between worlds
 					return;
@@ -1599,20 +1614,22 @@ public class APIHandler {
 		if (e != null) {
 			World w = e.getEntityWorld();
 			Vec3d pos0 = e.getPositionVector();
-			while (w != e.getEntityWorld()) {
-				// Rare concurrency issue: entity switched worlds between getting w and pos0.
-				// To be somewhat safe, let's sleep for approximately a server tick and get
-				// everything again. 
-				try { Thread.sleep(50); } catch(Exception exc) {}
-				w = e.getEntityWorld();
-				pos0 = e.getPositionVector();
-			}
+			sendLine(pos0);
+			// while (w != e.getEntityWorld()) {
+			// 	// Rare concurrency issue: entity switched worlds between getting w and pos0.
+			// 	// To be somewhat safe, let's sleep for approximately a server tick and get
+			// 	// everything again. 
+			// 	try { Thread.sleep(50); } catch(Exception exc) {}
+			// 	w = e.getEntityWorld();
+			// 	pos0 = e.getPositionVector();
+			// }
 			
-			Vec3d pos = Location.encodeVec3(serverWorlds, w, pos0);
-			sendLine(pos);
+			// Vec3d pos = Location.encodeVec3(serverWorlds, w, pos0);
+			// System.err.println(pos);
+			// sendLine(pos);
+		}else {
+			fail("Cannot find entity");
 		}
-        else
-            fail("Cannot find entity");
 	}
 
 	protected void sendLine(double x) {
@@ -1641,6 +1658,22 @@ public class APIHandler {
 		int y = scan.nextInt();
 		int z = scan.nextInt();
 		return Location.decodeLocation(serverWorlds, x, y, z);
+	}
+
+	protected Location getBlockAbsoluteLocation(Scanner scan) {
+		World world = playerMP.getEntityWorld();
+		int x = scan.nextInt();
+		int y = scan.nextInt();
+		int z = scan.nextInt();
+		return new Location(world,x,y,z);
+	}
+
+	protected Vec3w getAbsoluteVec3w(Scanner scan) {
+		double x = scan.nextDouble();
+		double y = scan.nextDouble();
+		double z = scan.nextDouble();
+		World world = playerMP.getEntityWorld();
+		return new Vec3w(world,x,y,z);
 	}
 
 	protected Entity getServerEntityByID(int id) {
