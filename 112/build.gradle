@@ -21,8 +21,8 @@ plugins {
 }
 */
 version = "0.01"
-group= "mobi.omegacentauri.scratch2minecraftmod" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "Scratch2MinecraftMod"
+group= "com.github.takecx.remotecontroller" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "RemoteController"
 
 sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 //compileJava.options.bootClasspath = "$JDK8_HOME/jre/lib/rt.jar"
