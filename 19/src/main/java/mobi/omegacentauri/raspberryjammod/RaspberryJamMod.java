@@ -55,7 +55,7 @@ acceptedMinecraftVersions="[1.9,1.9.4)")
 public class RaspberryJamMod
 {
 	public static final String MODID = "remotecontroller";
-	public static final String VERSION = "0.01";
+	public static final String VERSION = "0.02";
 	public static final String NAME = "Remote Controller";
 	private APIServer fullAPIServer = null;
 	private PythonExternalCommand pythonExternalCommand = null;
