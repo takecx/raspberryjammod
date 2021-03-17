@@ -54,9 +54,9 @@ guiFactory = "mobi.omegacentauri.raspberryjammod.GuiFactory", acceptableRemoteVe
 acceptedMinecraftVersions="[1.9,1.9.4)")
 public class RaspberryJamMod
 {
-	public static final String MODID = "scratch2minecraftmod";
+	public static final String MODID = "remotecontroller";
 	public static final String VERSION = "0.01";
-	public static final String NAME = "Scratch2Minecraft Mod";
+	public static final String NAME = "Remote Controller";
 	private APIServer fullAPIServer = null;
 	private PythonExternalCommand pythonExternalCommand = null;
 	private NightVisionExternalCommand nightVisionExternalCommand = null;
